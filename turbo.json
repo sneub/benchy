@@ -18,16 +18,20 @@
       "persistent": true
     },
     "db:push": {
-      "dependsOn": ["^db:push"]
+      "dependsOn": ["^db:push"],
+      "cache": false
     },
     "db:generate": {
-      "dependsOn": ["^db:generate"]
+      "dependsOn": ["^db:generate"],
+      "cache": false
     },
     "db:seed": {
-      "dependsOn": ["^db:seed"]
+      "dependsOn": ["^db:seed"],
+      "cache": false
     },
     "db:reset": {
-      "dependsOn": ["^db:reset"]
+      "dependsOn": ["^db:reset"],
+      "cache": false
     },
     "benchmark": {
       "dependsOn": ["^benchmark", "^build"],

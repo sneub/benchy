@@ -1,13 +1,12 @@
 import { prisma as prismaPpg } from "@repo/prisma-postgres";
 import { prisma as prismaNeon } from "@repo/neon-postgres";
+import { prisma as prismaSupabase } from "@repo/supabase-postgres";
 
 async function runBenchmarks(prisma: typeof prismaPpg, dbName: string) {
-  console.log(`\nRunning benchmarks for ${dbName}...`);
-
   // Test 1: Connection cold start test (empty query)
-  const coldStartStart = performance.now();
+  const firstQueryStart = performance.now();
   await prisma.$queryRaw`SELECT 1`;
-  const coldStartDuration = performance.now() - coldStartStart;
+  const firstQueryDuration = performance.now() - firstQueryStart;
 
   // Test 2: Connection latency test (empty query)
   const latencyStart = performance.now();
@@ -45,7 +44,7 @@ async function runBenchmarks(prisma: typeof prismaPpg, dbName: string) {
   console.log(`\nBenchmark Summary for ${dbName}:`);
   console.log("------------------");
   console.log(`Total records: ${users.length}`);
-  console.log(`Cold start time: ${coldStartDuration.toFixed(2)}ms`);
+  console.log(`First query time: ${firstQueryDuration.toFixed(2)}ms`);
   console.log(`Connection latency: ${latencyDuration.toFixed(2)}ms`);
   console.log(`Full table scan: ${findManyDuration.toFixed(2)}ms`);
   console.log(`Single record lookup: ${findUniqueDuration.toFixed(2)}ms`);
@@ -60,6 +59,7 @@ async function main() {
   const clients = [
     { client: prismaPpg, name: "Prisma" },
     { client: prismaNeon, name: "Neon" },
+    { client: prismaSupabase, name: "Supabase" },
   ];
 
   for (const { client, name } of clients) {
